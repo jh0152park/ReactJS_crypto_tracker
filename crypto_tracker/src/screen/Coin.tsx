@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router";
+import {
+  Switch,
+  Route,
+  useParams,
+  useLocation,
+  useRouteMatch,
+} from "react-router";
 import { styled } from "styled-components";
+
+import Price from "./Price";
+import Chart from "./Chart";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -51,6 +61,28 @@ const Description = styled.p`
   margin: 20px 0px;
 `;
 
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  gap: 10px;
+`;
+
+const Tab = styled.span<{ isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bolder;
+  background-color: #636e72;
+  padding: 7px 0px;
+  border-radius: 10px;
+  color: ${(prop) =>
+    prop.isActive ? prop.theme.accentColor : prop.theme.textColor};
+  a {
+    display: block;
+  }
+`;
+
 interface RouteState {
   name: string;
 }
@@ -61,7 +93,7 @@ interface InfoData {
   symbol: string;
   rank: number;
   is_new: boolean;
-  is_active: boolean;
+  isActive: boolean;
   type: string;
   logo: string;
   description: string;
@@ -119,6 +151,9 @@ function Coin() {
   const { coinId } = useParams<{ coinId: string }>();
   const { state } = useLocation<RouteState>();
 
+  const priceMatch = useRouteMatch("/:coinId/price");
+  const chartMatch = useRouteMatch("/:coinId/chart");
+
   useEffect(() => {
     (async () => {
       const infoData = await (
@@ -131,16 +166,15 @@ function Coin() {
       setInfo(infoData);
       setPrice(priceData);
       setLoading(false);
-
-      console.log(infoData);
-      console.log(priceData);
     })();
   }, []);
 
   return (
     <Container>
       <Header>
-        <Title>{state?.name || "Loading"}</Title>
+        <Title>
+          {state?.name ? state?.name : loading ? "Loading..." : info?.name}
+        </Title>
       </Header>
 
       {loading ? (
@@ -172,6 +206,29 @@ function Coin() {
               <p>{price?.max_supply}</p>
             </div>
           </Overview>
+
+          <Tabs>
+            <>
+              <Tab isActive={priceMatch !== null}>
+                <Link to={`/${coinId}/price`}>Price</Link>
+              </Tab>
+            </>
+
+            <>
+              <Tab isActive={chartMatch !== null}>
+                <Link to={`/${coinId}/chart`}>Chart</Link>
+              </Tab>
+            </>
+          </Tabs>
+
+          <Switch>
+            <Route path={`/:coinId/price`}>
+              <Price></Price>
+            </Route>
+            <Route path={`/:coinId/chart`}>
+              <Chart></Chart>
+            </Route>
+          </Switch>
         </>
       )}
     </Container>
