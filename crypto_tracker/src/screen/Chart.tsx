@@ -18,8 +18,12 @@ interface IHistoryData {
 }
 
 function Chart({ coinId }: ChartProps) {
-  const { isLoading, data } = useQuery<IHistoryData[]>(["ohlcv", coinId], () =>
-    fetchCoinHistory(coinId)
+  const { isLoading, data } = useQuery<IHistoryData[]>(
+    ["ohlcv", coinId],
+    () => fetchCoinHistory(coinId),
+    {
+      refetchInterval: 1000 * 1 * 60 * 5,
+    }
   );
 
   return (

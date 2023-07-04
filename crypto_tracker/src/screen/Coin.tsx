@@ -7,6 +7,7 @@ import {
   useRouteMatch,
 } from "react-router";
 import { styled } from "styled-components";
+import { Helmet } from "react-helmet";
 
 import Price from "./Price";
 import Chart from "./Chart";
@@ -170,13 +171,21 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId)
+    () => fetchCoinTickers(coinId),
+    {
+      refetchInterval: 1000 * 1 * 60 * 5,
+    }
   );
 
   const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state?.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         <Title>
           {state?.name ? state?.name : loading ? "Loading..." : infoData?.name}
@@ -198,8 +207,8 @@ function Coin() {
                 <p>{infoData?.symbol}</p>
               </div>
               <div>
-                <p>Type</p>
-                <p>{infoData?.type}</p>
+                <p>Price</p>
+                <p>{tickersData?.quotes.USD.price.toFixed(3)}</p>
               </div>
             </Overview>
           </DescriptionContainer>
