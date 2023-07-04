@@ -38,8 +38,16 @@ const Loader = styled.div`
   font-weight: bold;
 `;
 
-const Overview = styled.div`
+const DescriptionContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  height: 100%;
+`;
+
+const Overview = styled.div`
+  width: 500px;
   height: 50px;
   border-radius: 15px;
   background-color: #636e72;
@@ -56,19 +64,23 @@ const Overview = styled.div`
 `;
 
 const Description = styled.p`
+  width: 500px;
   color: whitesmoke;
   font-size: 15px;
   margin: 20px 0px;
 `;
 
 const Tabs = styled.div`
-  display: grid;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   grid-template-columns: repeat(2, 1fr);
   margin: 25px 0px;
   gap: 10px;
 `;
 
 const Tab = styled.span<{ isActive: boolean }>`
+  width: 245px;
   text-align: center;
   text-transform: uppercase;
   font-size: 12px;
@@ -181,31 +193,39 @@ function Coin() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Overview>
-            <div>
-              <p>Rank</p>
-              <p>{info?.rank}</p>
-            </div>
-            <div>
-              <p>Symbol</p>
-              <p>{info?.symbol}</p>
-            </div>
-            <div>
-              <p>Type</p>
-              <p>{info?.type}</p>
-            </div>
-          </Overview>
-          <Description>{info?.description}</Description>
-          <Overview>
-            <div>
-              <p>Total Suply</p>
-              <p>{price?.total_supply}</p>
-            </div>
-            <div>
-              <p>Max Suply</p>
-              <p>{price?.max_supply}</p>
-            </div>
-          </Overview>
+          <DescriptionContainer>
+            <Overview>
+              <div>
+                <p>Rank</p>
+                <p>{info?.rank}</p>
+              </div>
+              <div>
+                <p>Symbol</p>
+                <p>{info?.symbol}</p>
+              </div>
+              <div>
+                <p>Type</p>
+                <p>{info?.type}</p>
+              </div>
+            </Overview>
+          </DescriptionContainer>
+
+          <DescriptionContainer>
+            <Description>{info?.description}</Description>
+          </DescriptionContainer>
+
+          <DescriptionContainer>
+            <Overview>
+              <div>
+                <p>Total Suply</p>
+                <p>{price?.total_supply}</p>
+              </div>
+              <div>
+                <p>Max Suply</p>
+                <p>{price?.max_supply}</p>
+              </div>
+            </Overview>
+          </DescriptionContainer>
 
           <Tabs>
             <Tab isActive={chartMatch !== null}>
