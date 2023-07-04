@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@tanstack/react-query": "^4.29.19",
+    "apexcharts": "^3.41.0",
+    "react-apexcharts": "^1.4.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^5.3.0",
     "styled-components": "^6.0.1"

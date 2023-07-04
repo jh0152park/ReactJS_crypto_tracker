@@ -6,3 +6,5 @@ References
 font: https://fonts.google.com/
 
 color: https://flatuicolors.com/
+
+chart: https://apexcharts.com/
