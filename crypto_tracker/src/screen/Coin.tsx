@@ -11,6 +11,8 @@ import { styled } from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
 import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinTickers } from "./api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -156,36 +158,28 @@ interface PriceData {
 }
 
 function Coin() {
-  const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState<InfoData>();
-  const [price, setPrice] = useState<PriceData>();
-
   const { coinId } = useParams<{ coinId: string }>();
   const { state } = useLocation<RouteState>();
 
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
 
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId)
+  );
 
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setInfo(infoData);
-      setPrice(priceData);
-      setLoading(false);
-    })();
-  }, []);
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state?.name : loading ? "Loading..." : info?.name}
+          {state?.name ? state?.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
 
@@ -197,32 +191,32 @@ function Coin() {
             <Overview>
               <div>
                 <p>Rank</p>
-                <p>{info?.rank}</p>
+                <p>{infoData?.rank}</p>
               </div>
               <div>
                 <p>Symbol</p>
-                <p>{info?.symbol}</p>
+                <p>{infoData?.symbol}</p>
               </div>
               <div>
                 <p>Type</p>
-                <p>{info?.type}</p>
+                <p>{infoData?.type}</p>
               </div>
             </Overview>
           </DescriptionContainer>
 
           <DescriptionContainer>
-            <Description>{info?.description}</Description>
+            <Description>{infoData?.description}</Description>
           </DescriptionContainer>
 
           <DescriptionContainer>
             <Overview>
               <div>
                 <p>Total Suply</p>
-                <p>{price?.total_supply}</p>
+                <p>{tickersData?.total_supply}</p>
               </div>
               <div>
                 <p>Max Suply</p>
-                <p>{price?.max_supply}</p>
+                <p>{tickersData?.max_supply}</p>
               </div>
             </Overview>
           </DescriptionContainer>
