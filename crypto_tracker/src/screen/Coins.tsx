@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchCoins } from "./api";
 import { Helmet } from "react-helmet";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDarkAtom } from "./atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -78,6 +80,10 @@ interface ICoinsProps {}
 
 function Coins({}: ICoinsProps) {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  const isDark = useRecoilValue(isDarkAtom);
+  const setTheme = useSetRecoilState(isDarkAtom);
+  const sun = "☀️";
+  const moon = "🌙";
 
   return (
     <Container>
@@ -86,6 +92,16 @@ function Coins({}: ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button
+          onClick={() => setTheme((prev) => !prev)}
+          style={{
+            backgroundColor: "inherit",
+            border: "0px",
+            fontSize: "20px",
+          }}
+        >
+          {isDark ? sun : moon}
+        </button>
       </Header>
 
       {isLoading ? (
