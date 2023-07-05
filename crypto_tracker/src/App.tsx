@@ -4,6 +4,8 @@ import { createGlobalStyle } from "styled-components";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./theme";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./screen/atoms";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;500&display=swap');
@@ -66,19 +68,17 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  const [isDark, setIsDart] = useState(true);
-  const toggleDark = () => setIsDart(current => !current);
+  const isDark = useRecoilValue(isDarkAtom);
 
   return (
     <>
-      <ThemeProvider theme={isDark? darkTheme : lightTheme}>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle></GlobalStyle>
-        <Router isDark={isDark} toggleDark={toggleDark}></Router>
+        <Router></Router>
         <ReactQueryDevtools initialIsOpen={true}></ReactQueryDevtools>
       </ThemeProvider>
     </>
   );
 }
-
 
 export default App;
