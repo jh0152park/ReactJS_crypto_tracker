@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Router from "./Router";
 import { createGlobalStyle } from "styled-components";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;500&display=swap');
@@ -64,13 +66,19 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+  const [isDark, setIsDart] = useState(true);
+  const toggleDark = () => setIsDart(current => !current);
+
   return (
     <>
-      <GlobalStyle></GlobalStyle>
-      <Router></Router>
-      <ReactQueryDevtools initialIsOpen={true}></ReactQueryDevtools>
+      <ThemeProvider theme={isDark? darkTheme : lightTheme}>
+        <GlobalStyle></GlobalStyle>
+        <Router isDark={isDark} toggleDark={toggleDark}></Router>
+        <ReactQueryDevtools initialIsOpen={true}></ReactQueryDevtools>
+      </ThemeProvider>
     </>
   );
 }
+
 
 export default App;

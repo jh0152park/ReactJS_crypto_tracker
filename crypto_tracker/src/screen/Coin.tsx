@@ -68,7 +68,7 @@ const Overview = styled.div`
 
 const Description = styled.p`
   width: 500px;
-  color: whitesmoke;
+  color: white;
   font-size: 15px;
   margin: 20px 0px;
 `;
@@ -158,7 +158,11 @@ interface PriceData {
   };
 }
 
-function Coin() {
+interface ICoin {
+  isDark: boolean;
+}
+
+function Coin({isDark}: ICoin) {
   const { coinId } = useParams<{ coinId: string }>();
   const { state } = useLocation<RouteState>();
 
@@ -245,7 +249,7 @@ function Coin() {
               <Price></Price>
             </Route>
             <Route path={`/:coinId/chart`}>
-              <Chart coinId={coinId}></Chart>
+              <Chart isDark={isDark} coinId={coinId}></Chart>
             </Route>
           </Switch>
         </>

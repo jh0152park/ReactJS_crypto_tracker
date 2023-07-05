@@ -28,8 +28,8 @@ const Title = styled.h1`
 const CoinList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: whitesmoke;
-  color: ${(p) => p.theme.backgroundColor};
+  background-color: white;
+  color: ${(p) => p.theme.textColor};
   margin-bottom: 10px;
   border-radius: 15px;
   font-weight: bold;
@@ -74,7 +74,11 @@ interface ICoin {
   type: string;
 }
 
-function Coins() {
+interface ICoinsProps {
+  toggleDark: () => void;
+}
+
+function Coins({toggleDark}: ICoinsProps) {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
   return (
@@ -84,6 +88,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleDark}>Toggle Mode</button>
       </Header>
 
       {isLoading ? (

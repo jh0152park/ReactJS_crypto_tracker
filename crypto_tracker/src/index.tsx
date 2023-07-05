@@ -12,8 +12,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={darkTheme}>
+    
       <App />
-    </ThemeProvider>
+    
   </QueryClientProvider>
 );
